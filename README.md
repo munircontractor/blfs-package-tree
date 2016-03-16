@@ -1,4 +1,4 @@
-# blfs-package-tree
+# BLFS Packages Dependency Tree Builder and Visualizer
 This is a python code to plot a the package tree for the Beyond Linux From Scratch books.
 
 The code uses BeautifulSoup from bs4 to scrap the website and generate a list of packages and their dependency tree.  
