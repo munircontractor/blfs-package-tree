@@ -1,5 +1,7 @@
-# BLFS Packages Dependency Tree Builder and Visualizer
-This is a python code to plot a the package tree for the Beyond Linux From Scratch books.
+# BLFS Packages Dependency Tree Builder and Visualizer  
+This is a Python code to plot a the package tree for the Beyond Linux From Scratch books.
+It collects data from Linux From Scratch website and generates a visual dependency tree.
 
-The code uses BeautifulSoup from bs4 to scrap the website and generate a list of packages and their dependency tree.  
-I am still working on creating the graph for the dependency tree to provide a visual picture of the tree.
+### Required Modules:
+1. `bs4`: `BeautifulSoup` from the `bs4` module is used to collect data from the BLFS website
+2. `netwrokx`: `netwrokx` is used to plot the visuals. Refer [Networkx website](https://networkx.readthedocs.org/en/stable/index.html) for upstream requirements.
