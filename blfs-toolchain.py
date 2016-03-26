@@ -10,12 +10,23 @@ from urllib2 import urlopen
 #from time import sleep
 
 BASE_URL = 'http://linuxfromscratch.org/blfs/view/systemd/'
+pcklist = dict()
+
+def deps_list(deps):
+    l = []
+    for item in deps:
+        for c in item.contents:
+            try:
+                l.append(c.attrs['title'])
+            except AttributeError:
+                pass
+            except KeyError:
+                pass
+    return l
 
 html = urlopen(BASE_URL).read()
 soup = bs(html,'lxml')
 sects = soup.findAll("li",{"class" : "sect1"})
-
-pcklist = dict()
 
 for item in sects:
     try:
@@ -37,41 +48,10 @@ for k in pcklist.iterkeys():
     reqs = soup2.findAll('p',{'class':'required'})
     recs = soup2.findAll('p',{'class':'recommended'})
     opts = soup2.findAll('p',{'class':'optional'})
-    
-    reqpcks = []
-    recpcks = []
-    optpcks = []
 
-    for item in reqs:
-        for c in item.contents:
-            try:
-                reqpcks.append(c.attrs['title'])
-            except AttributeError:
-                pass
-            except KeyError:
-                pass
-
-    for item in recs:
-        for c in item.contents:
-            try:
-                recpcks.append(c.attrs['title'])
-            except AttributeError:
-                pass
-            except KeyError:
-                pass
-
-    for item in opts:
-        for c in item.contents:
-            try:
-                optpcks.append(c.attrs['title'])
-            except AttributeError:
-                pass
-            except KeyError:
-                pass
-
-    pcklist[k][1] = reqpcks
-    pcklist[k][2] = recpcks
-    pcklist[k][3] = optpcks
+    pcklist[k][1] = deps_list(reqs)
+    pcklist[k][2] = deps_list(recs)
+    pcklist[k][3] = deps_list(opts)
     
     print 'Finished page: ' + soup2.title.string.strip()
     #print 'Sleeping for 5 secs'
