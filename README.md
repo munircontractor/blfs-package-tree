@@ -8,6 +8,7 @@ It collects data from Linux From Scratch website and generates a visual dependen
 3. `pydotplus`: The `pydotplus` module is required for plotting and saving the visuals. Refer [pydotplus docs](http://pydotplus.readthedocs.org/) for upstream requirements.
 4. `os, sys, getopt, urllib2, time`: All these should be available with most Python installations.
 
+```
 Usage: python blfs-toolchain.py [OPTIONS] [URL|DOTFILE]
 URL     : BLFS book URL for which dependency tree is needed.
           Example URL: 'http://linuxfromscratch.org/blfs/view/stable/'
@@ -21,5 +22,6 @@ Possible OPTIONS are:
 -d, --dependents=<pck>: Get packages which are dependent on pck
 -p, --print           : Print all package names.
                         Use this to get names for <pck> for -d
+```
 
-#### If long options don't work, use short options.
+ *If long options don't work, use short options.*
