@@ -34,8 +34,6 @@ except ImportError:
     print 'Package pydotplus not found. Please install.'
     sys.exit(5)
 
-BASE_URL = 'http://linuxfromscratch.org/blfs/view/systemd/'
-
 def deps_list(deps):
     l = []
     for item in deps:
