@@ -13,11 +13,11 @@ DOTFILE : Pregenerated dot file with the dependency tree
 
 Possible OPTIONS are:
 -h, --help            : Print this help document
--o, --outfile <file>  : File to save dot output
--i, --imgfile <file>  : File to save dependency tree image (use proper extension)
+-o, --outfile=<file>  : File to save dot output
+-i, --imgfile=<file>  : File to save dependency tree image (use proper extension)
                         Image format can be any supported pydotplus format
                         Requires good grpahics capability on system
--d, --dependents <pck>: Get packages which are dependent on pck
+-d, --dependents=<pck>: Get packages which are dependent on pck
 -p, --print           : Print all package names.
                         Use this to get names for <pck> for -d
 """
@@ -27,10 +27,12 @@ try:
     import networkx as nx
 except ImportError:
     print 'Package networkx not found. Please install.'
+    sys.exit(5)
 try:
     import pydotplus as pd
 except ImportError:
     print 'Package pydotplus not found. Please install.'
+    sys.exit(5)
 
 BASE_URL = 'http://linuxfromscratch.org/blfs/view/systemd/'
 
@@ -94,10 +96,12 @@ def build_graph(BASE_URL, rest=1):
         from bs4 import BeautifulSoup as bs
     except ImportError:
         print 'Package bs4 not found. Please install or read graph from dot file.'
+        sys.exit(5)
     try:
         from urllib2 import urlopen
     except ImportError:
         print 'Package urllib2 not found. Please install or read graph from dot file.'
+        sys.exit(5)
     from time import sleep
     
     pcklist = dict()
@@ -146,15 +150,11 @@ def build_graph(BASE_URL, rest=1):
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "ho:i:d:p", ["help","outfile","imgfile","dependents","print"])
+        opts, args = getopt.getopt(sys.argv[1:], "ho:i:d:p", ["help","outfile=","imgfile=","dependents=","print"])
     except getopt.GetoptError as err:
         print str(err)
         print helpdoc
         sys.exit(1)
-    if len(args) != 1:
-        print 'Too many or too few arguments'
-        print helpdoc
-        sys.exit(2)
     if len(opts) < 1:
         print 'At least one option is required'
         print helpdoc
@@ -169,12 +169,12 @@ if __name__ == '__main__':
             sys.exit(0)
         elif o == "-o":
             outfile = a
-            if !(os.access(os.path.dirname(outfile),os.W_OK)) or outfile[0] == '-':
+            if not(os.access(os.path.dirname(outfile),os.W_OK)) or outfile[0] == '-':
                 print 'Cannot write to file or bad file name'
                 sys.exit(3)
         elif o == "-i":
             imgfile = a
-            if !(os.access(os.path.dirname(imgfile))) or imgfile[0] == '-':
+            if not(os.access(os.path.dirname(imgfile))) or imgfile[0] == '-':
                 print 'Cannot write to file or bad file name'
                 sys.exit(3)
         elif o == "-d":
@@ -184,6 +184,10 @@ if __name__ == '__main__':
         else:
             print 'Unhandled option'
             sys.exit(9)
+    if len(args) != 1:
+        print 'Too many or too few arguments'
+        print helpdoc
+        sys.exit(2)
     for a in args:
         try:
             ind = a.index('http://linuxfromscratch.org/blfs/view/')
@@ -205,9 +209,11 @@ if __name__ == '__main__':
         else:
             print 'Unhandled argument'
             sys.exit(9)
-    if BASEURL = '' and len(DOTFILE) > 0:
+    if BASEURL == '' and len(DOTFILE) > 0:
+        print 'Reading data from ' + DOTFILE
         G = read_graph(DOTFILE)
-    elif DOTFILE = '' and len(BASEURL) > 0:
+    elif DOTFILE == '' and len(BASEURL) > 0:
+        print 'Building data from ' + BASEURL
         G = build_graph(BASEURL)
     if printing:
         print 'Full list of packages: \n ' + str(G.nodes())[1:-1].replace(',','\n')
@@ -217,6 +223,7 @@ if __name__ == '__main__':
         save_dot(G,outfile)
     if imgfile != '':
         fmt = os.path.splitext(imgfile)[1][1:]
+        if fmt == '': fmt = png
         print 'Creating image in ' + fmt + ' format...this will take a while'
         print_graph(G, fmt)
     sys.exit(0)
