@@ -52,7 +52,7 @@ def build_edge_list(node, neighbor_list):
         for n in neighbor_list:
             e.append((n,node))
     return e
-    
+
 def get_deps(G,pck,prnt=True):
     deps_req = []
     deps_rec = []
@@ -73,17 +73,15 @@ def get_deps(G,pck,prnt=True):
         print 'Packages for which ' + pck + ' is required are:\n ' + str(deps_req)[1:-1].replace(',','\n')
         print 'Packages for which ' + pck + ' is recommended are:\n ' + str(deps_rec)[1:-1].replace(',','\n')
         print 'Packages for which ' + pck + ' is optional are:\n ' + str(deps_opt)[1:-1].replace(',','\n')
-    #return deps_req, deps_rec, deps_opt
-    
+
 def print_graph(G,imgfile,fmt):
     P = nx.nx_pydot.to_pydot(G)
     P.write(imgfile, prog='dot', format=fmt)
-    print 'Image saved as ' + imgfile
+    print 'Graph saved as ' + imgfile
 
 def save_dot(G,outfile):
-    print_full_graph(G,outfile,'raw')
-    print 'Dependency tree dot file saved as: ' + outfile
-    
+    print_graph(G,outfile,'raw')
+
 def read_graph(infile):
     P = pd.graph_from_dot_file(infile)
     G = nx.nx_pydot.from_pydot(P)
@@ -148,7 +146,7 @@ def build_graph(BASE_URL, rest=1):
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "ho:i:d:p", ["help","outfile=","imgfile=","dependents=","print"])
+        opts, args = getopt.getopt(sys.argv[1:], "ho:i:d:p")
     except getopt.GetoptError as err:
         print str(err)
         print helpdoc
@@ -167,12 +165,12 @@ if __name__ == '__main__':
             sys.exit(0)
         elif o == "-o":
             outfile = a
-            if not(os.access(os.path.dirname(outfile),os.W_OK)) or outfile[0] == '-':
+            if not(os.access(os.path.dirname(os.path.abspath(outfile)), os.W_OK)):
                 print 'Cannot write to file or bad file name'
                 sys.exit(3)
         elif o == "-i":
             imgfile = a
-            if not(os.access(os.path.dirname(imgfile))) or imgfile[0] == '-':
+            if not(os.access(os.path.dirname(os.path.abspath(imgfile)), os.W_OK)):
                 print 'Cannot write to file or bad file name'
                 sys.exit(3)
         elif o == "-d":
@@ -201,7 +199,7 @@ if __name__ == '__main__':
         elif badind != -1:
             print 'Bad URL'
             sys.exit(4)
-        elif os.access(a,os.R_OK):
+        elif os.access(a, os.R_OK):
             DOTFILE = a
             BASEURL = ''
         else:
