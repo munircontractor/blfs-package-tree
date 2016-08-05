@@ -12,14 +12,14 @@ URL     : BLFS book URL for which dependency tree is needed.
 DOTFILE : Pregenerated dot file with the dependency tree
 
 Possible OPTIONS are:
--h, --help            : Print this help document
--o, --outfile=<file>  : File to save dot output
--i, --imgfile=<file>  : File to save dependency tree image (use proper extension)
-                        Image format can be any supported pydotplus format
-                        Requires good grpahics capability on system
--d, --dependents=<pck>: Get packages which are dependent on pck
--p, --print           : Print all package names.
-                        Use this to get names for <pck> for -d
+-h         : Print this help document
+-o <file>  : File to save dot output
+-i <file>  : File to save dependency tree image (use proper extension)
+             Image format can be any supported pydotplus format
+             Requires good grpahics capability on system
+-d <pck>   : Get packages which are dependent on pck
+-p         : Print all package names.
+             Use this to get names for <pck> for -d
 """
 
 import sys, os, getopt
